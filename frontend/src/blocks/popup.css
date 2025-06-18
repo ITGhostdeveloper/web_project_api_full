@@ -1,0 +1,311 @@
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.75;
+}
+
+.popup {
+  display: flex;
+  position: absolute;
+  top: 25%;
+  background-color: transparent;
+  border: none;
+  padding: 40px;
+  max-width: 430px;
+  width: 100%;
+}
+
+.popup__container {
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 430px;
+  width: 100%;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding-bottom: 36px;
+}
+
+.popup__title {
+  font-family: "Inter-black";
+  font-style: normal;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  color: #000000;
+  margin: 34px auto 54px 36px;
+}
+
+
+
+.popup__form {
+  justify-content: center;
+  padding: auto 36px 36px 36px;
+  width: 90%;
+}
+
+.popup__input {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  max-width: 358px;
+  width: 100%;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+  padding: 13.26px 0;
+  margin-left: 35px;
+}
+
+.popup__input_description {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  max-width: 358px;
+  width: 100%;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+  padding: 13.26px 0;
+  margin: 0 auto 0px 36px;
+}
+
+.popup__input_card-title {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  max-width: 358px;
+  width: 90%;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+  padding: 13.26px 0;
+  margin-left: 35px;
+}
+
+.popup__input_card-url {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  max-width: 358px;
+  width: 90%;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+  padding: 13.26px 0;
+  margin: 0 auto 0px 36px;
+}
+
+.popup__image-box {
+  position: relative;
+  align-content: center;
+  background-color: transparent;
+  border: none;
+  max-width: 530px;
+  width: 100%;
+  padding: 40px 0 40px 0;
+}
+
+.popup__image-container {
+  max-width: 433px;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  padding: 0;
+}
+
+.close-popup {
+  position: absolute;
+  -webkit-text-stroke: 1px black;
+  font-size: 60px;
+  font-weight: 400;
+  font-family: "Inter";
+  font-style: normal;
+  max-width: 40px;
+  width: 100%;
+  left: 91%;
+  bottom: 92%;
+  color: #ffffff;
+  background: none;
+  cursor: pointer;
+}
+
+.image-details {
+  min-height: 540px;
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+
+.popup-name {
+  position: absolute;
+  font-family: "Inter";
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  color: white;
+  margin-top: 10px;
+}
+
+.submit:hover {
+  opacity: 0.8;
+}
+
+.submit {
+  max-width: 358px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50.15px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 1);
+  cursor: pointer;
+  margin: 48px 36px 0px 36px;
+}
+
+.submit__text {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.close:hover {
+  opacity: 0.6;
+}
+
+.close {
+  position: absolute;
+  -webkit-text-stroke: 1px black;
+  font-size: 50px;
+  font-weight: 400;
+  font-family: "Inter";
+  font-style: normal;
+  max-width: 40px;
+  width: 100%;
+  left: 92%;
+  bottom: 88%;
+  color: #ffffff;
+  background: none;
+  cursor: pointer;
+}
+
+.popup__button_disabled {
+  opacity: 0.5;
+  cursor: normal;
+}
+
+.popup__input_type_error {
+  border-bottom: red;
+}
+
+.popup__error {
+  max-width: 270px;
+  height: 16px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ff0000;
+  display: none;
+  margin: 6px 0 0 35px;
+}
+
+.popup__error_visible {
+  display: block;
+  margin-bottom: 24px;
+}
+
+@media screen and (max-width: 530px) {
+  .popup {
+    padding: 50px 0 50px 0;
+    width: 100%;
+  }
+  .popup__container {
+    width: 90%;
+    padding-bottom: 25px;
+  }
+
+  .close {
+    font-size: 35px;
+    bottom: 90%;
+    left: 86%;
+  }
+
+  .popup__title {
+    width: 90%;
+    margin: 25px 0 76px 22px;
+    font-family: "Inter-black";
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 21.78px;
+  }
+
+  .popup__form {
+    width: 90%;
+    margin: 0;
+  }
+
+  .popup__form_name {
+    margin-left: 22px;
+    width: 100%;
+  }
+
+  .popup__form_description {
+    width: 100%;
+    margin: 30px 0px 46px 22px;
+  }
+
+  .popup__form_card-title {
+    margin-left: 22px;
+    width: 100%;
+  }
+
+  .popup__form_card-url {
+    width: 100%;
+    margin: 30px 0px 46px 22px;
+  }
+
+  .submit {
+    width: 95%;
+    margin-left: 22px;
+    margin-right: 22px;
+  }
+
+  .submit__text {
+    margin: auto;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16.94px;
+    text-align: center;
+    font-family: "Inter";
+  }
+
+  .popup__image-container {
+    max-width: 240px;
+  }
+
+  .close-popup {
+    font-size: 30px;
+    bottom: 90%;
+    left: 72%;
+  }
+  .image-details {
+    max-width: 240px;
+    width: 100%;
+    min-height: 299px;
+  }
+}
