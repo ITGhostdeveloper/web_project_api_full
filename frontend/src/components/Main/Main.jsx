@@ -24,6 +24,10 @@ function Main({
   const [avatar, setAvatar] = useState("");
   const { currentUser } = useContext(CurrentUserContext);
 
+  if (!currentUser || !currentUser.name) {
+    return <p>Cargando perfil...</p>;
+  }
+
   const editProfile = {
     title: "Editar Perfil",
     children: currentUser ? (
@@ -107,7 +111,6 @@ function Main({
           ))}
         </div>
       </section>
-      
     </main>
   );
 }

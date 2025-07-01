@@ -1,6 +1,6 @@
 function Popup(props) {
   const { title, children, onClose } = props;
-  console.log(children)
+  
   return (
     <dialog className="popup">
       <div
@@ -11,7 +11,6 @@ function Popup(props) {
         </button>
         {title && <h3 className="popup__title">{title}</h3>}
         {children}
-
       </div>
     </dialog>
   );

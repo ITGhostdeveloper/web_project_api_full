@@ -4,11 +4,12 @@ class Api {
     this._headers = options.headers;
   }
 
-  getUserInfo() {
+  getUserInfo(token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "GET",
       headers: {
-        ...this._headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     })
       .then((res) => {
@@ -21,11 +22,12 @@ class Api {
       });
   }
 
-  getInitialCards() {
+  getInitialCards(token) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "GET",
       headers: {
-        ...this._headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     })
       .then((res) => {
@@ -38,48 +40,50 @@ class Api {
       });
   }
 
-  setUserInfo(data) {
+  setUserInfo(data, token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         name: data.name,
         about: data.about,
       }),
     }).then((res) => {
       if (!res.ok) {
-        return Promise.reject("Error: ${res.status}");
+        return Promise.reject(`Error: ${res.status}`);
       }
       return res.json();
     });
   }
 
-  addCard(data) {
+  addCard(data, token) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
       headers: {
-        ...this._headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: data.name,
         link: data.link,
       }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .catch((error) => {
-        console.error("Error al agregar tarjeta:", error);
-      });
+    }).then((res) => {
+      if (!res.ok) {
+        return res.json().then((err) => Promise.reject(err));
+      }
+      return res.json();
+    });
   }
 
-  likeCard(_id) {
-    return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
+  likeCard(cardId, token) {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
       headers: {
-        ...this._headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     })
       .then((res) => {
@@ -92,11 +96,12 @@ class Api {
       });
   }
 
-  deleteLike(_id) {
-    return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
+  deleteLike(cardId, token) {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: {
-        ...this._headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     })
       .then((res) => {
@@ -109,10 +114,13 @@ class Api {
       });
   }
 
-  deleteCard(_id) {
-    return fetch(`${this._baseUrl}/cards/${_id}`, {
+  deleteCard(cardId, token) {
+    return fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     }).then((res) => {
       if (!res.ok) {
         return res.json().then((err) => Promise.reject(err));
@@ -121,25 +129,31 @@ class Api {
     });
   }
 
-  updateProfilePicture(data) {
+  updateProfilePicture(data, token) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         avatar: data,
       }),
     }).then((res) => {
       if (!res.ok) {
-        return Promise.reject("Error: ${res.status}");
+        return Promise.reject(`Error: ${res.status}`);
       }
       return res.json();
     });
   }
-  changeLikeCardStatus(cardId, isLiked) {
+  changeLikeCardStatus(cardId, isLiked, token) {
     const method = isLiked ? "PUT" : "DELETE";
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method,
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -151,9 +165,5 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: "https://around-api.es.tripleten-services.com/v1",
-  headers: {
-    authorization: "9cca45ef-3723-4be9-828d-4e8639d35ee1",
-    "Content-Type": "application/json",
-  },
+  baseUrl: "http://localhost:3000",
 });

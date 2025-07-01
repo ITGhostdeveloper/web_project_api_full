@@ -2,14 +2,14 @@ import ImagePopup from "../Popup/ImagePopup/ImagePopup";
 
 function Card(props) {
   const { card, onClick, onCardLike, onCardDelete } = props;
-  const { name, link, isLiked } = card;
+  const { name, link, likes } = card;
 
   const popupImage = {
     title: "",
     children: <ImagePopup name={name} link={link} />,
   };
   const cardLikeButtonClassName = `button-liked ${
-    isLiked ? "liked-button" : ""
+    likes.length > 0 ? "liked-button" : ""
   }`;
 
   function handleLikeClick() {

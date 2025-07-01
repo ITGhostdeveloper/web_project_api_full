@@ -17,6 +17,7 @@ import success from "../images/check.png";
 function App() {
   const [userData, setUserData] = useState({ email: "" });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("jwt") || "");
   const navigate = useNavigate();
 
   const handleRegistration = ({ email, password }) => {
@@ -58,9 +59,6 @@ function App() {
   };
   // manejo de la autenticación
   const handleLogin = ({ email, password }) => {
-    console.log("second");
-    console.log(email);
-    console.log(password);
     if (!email || !password) return;
     auth
       .authorize(email, password)
@@ -68,11 +66,13 @@ function App() {
         if (data.token) {
           // Guardar token en localStorage
           localStorage.setItem("jwt", data.token);
+          // Actualizar el estado del token
+          setToken(data.token);
           // Guardar datos del usuario
           setIsLoggedIn(true);
           // Cargar datos del usuario
           api
-            .getUserInfo()
+            .getUserInfo(data.token)
             .then((userData) => {
               setCurrentUser(userData);
               setUserData({ email });
@@ -102,6 +102,31 @@ function App() {
       });
   };
 
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) {
+      navigate("/signin");
+      return;
+    }
+
+    setToken(jwt);
+    setIsLoggedIn(true);
+
+    api
+      .getUserInfo(jwt)
+      .then((userData) => {
+        setCurrentUser(userData);
+        setUserData({ email: userData.email });
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Token inválido:", err);
+        localStorage.removeItem("jwt");
+        setIsLoggedIn(false);
+        navigate("/signin");
+      });
+  }, []);
+
   const [popup, setPopup] = useState(null);
   const handleClosePopup = () => {
     setPopup(null);
@@ -115,10 +140,16 @@ function App() {
     avatar: "",
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    setCurrentUser(null);
+    navigate("/signin");
+  };
+
   const handleUpdateUser = (data) => {
     (async () => {
       await api
-        .setUserInfo(data)
+        .setUserInfo(data, token)
         .then((newData) => {
           setCurrentUser(newData);
           handleClosePopup();
@@ -130,18 +161,26 @@ function App() {
   const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
+    if (!token) return;
     (async () => {
-      await api.getUserInfo().then((data) => {
-        setCurrentUser(data);
-        setAvatar(data.avatar);
-      });
+      try {
+        const data = await api.getUserInfo(token);
+        if (data && data.avatar) {
+          setCurrentUser(data);
+          setAvatar(data.avatar);
+        } else {
+          console.warn("La respuesta del usuario es inválida:", data);
+        }
+      } catch (err) {
+        console.error("Error al obtener la información del usuario:", err);
+      }
     })();
-  }, []);
+  }, [token]);
 
   const handleUpdateAvatar = (data) => {
     (async () => {
       await api
-        .updateProfilePicture(data)
+        .updateProfilePicture(data, token)
         .then((newData) => {
           setCurrentUser((prevUser) => ({
             ...prevUser,
@@ -158,20 +197,23 @@ function App() {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
+    if (!token) return;
     api
-      .getInitialCards()
+      .getInitialCards(token)
       .then((cards) => {
         setCards(cards);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [token]);
 
   async function handleCardLike(card) {
-    const isLiked = card.isLiked;
+    //const isLiked = card.likes.length > 0 && card.likes.some((like) => like._id === currentUser._id);
+    const isLiked = card.likes.length > 0;
 
     await api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, !isLiked, token)
       .then((newCard) => {
+        console.log("Nueva tarjeta después de like:", newCard);
         setCards((state) =>
           state.map((currentCard) =>
             currentCard._id === card._id ? newCard : currentCard
@@ -183,7 +225,7 @@ function App() {
 
   async function handleCardDelete(card) {
     await api
-      .deleteCard(card._id)
+      .deleteCard(card._id, token)
       .then(() => {
         setCards((state) =>
           state.filter((currentCard) => currentCard._id !== card._id)
@@ -194,7 +236,18 @@ function App() {
 
   const handleAddPlaceSubmit = async (data) => {
     try {
-      const newCard = await api.addCard({ name: data.name, link: data.link });
+      if (!token) {
+        console.error(" Token no disponible. No se puede agregar tarjeta.");
+        return;
+      }
+      if (!data.name || !data.link) {
+        console.error(" Faltan datos de la tarjeta (name o link)");
+        return;
+      }
+      const newCard = await api.addCard(
+        { name: data.name, link: data.link },
+        token
+      );
       setCards((prevCards) => [newCard, ...prevCards]);
       handleClosePopup();
     } catch (error) {
@@ -217,7 +270,11 @@ function App() {
           element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <div className="page">
-                <Header avatar={avatar} email={userData.email} />
+                <Header
+                  avatar={avatar}
+                  email={userData.email}
+                  handleLogout={handleLogout}
+                />
                 <Main
                   cards={cards}
                   onCardLike={handleCardLike}

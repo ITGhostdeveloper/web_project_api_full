@@ -1,4 +1,4 @@
-const Card = require('../models/card');
+const Card = require("../models/card");
 
 // Controlador para obtener la información de las tarjetas
 module.exports.getCards = (req, res) => {
@@ -13,28 +13,39 @@ module.exports.getCards = (req, res) => {
 
 // Controlador para crear una nueva tarjeta
 module.exports.newCard = (req, res) => {
-  console.log(req.user._id);
-  const { name, link, owner } = req.body;
+  console.log("req.user en newCard:", req.user);
+  console.log("Datos recibidos en el body:", req.body);
+  const { name, link } = req.body;
+  const owner = req.user._id;
+
   Card.create({ name, link, owner })
-    .then((card) => {
-      res.status(201).send(card);
-    })
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: "Error de validación" });
       }
-      res.status(500).send({ message: "Error en el servidor" });
+      next(err); // delega error a middleware global
     });
 };
 
 // Controlador para eliminar una tarjeta por ID
 module.exports.deleteCard = (req, res) => {
-  const { _id } = req.params;
-  Card.findByIdAndDelete(_id)
+  const { cardId } = req.params;
+
+  Card.findById(cardId)
     .orFail(new Error("NotFound"))
     .then((card) => {
-      res.status(200).send(card);
+      // Verificamos si el usuario autenticado es el dueño de la tarjeta
+      if (card.owner.toString() !== req.user._id) {
+        return res
+          .status(403)
+          .send({ message: "No tienes permiso para eliminar esta tarjeta" });
+      }
+
+      // Autenticacion exitosa, procedemos a eliminar la tarjeta
+      return Card.findByIdAndDelete(cardId).then(() => {
+        res.status(200).send({ message: "Tarjeta eliminada correctamente" });
+      });
     })
     .catch((err) => {
       console.error("Error en deleteCard:", err);
@@ -42,17 +53,20 @@ module.exports.deleteCard = (req, res) => {
         return res.status(400).send({ message: "ID de tarjeta inválido" });
       }
       if (err.message === "NotFound") {
-        return res.status(404).send({ message: "La Tarjeta no ha sido encontrada" });
+        return res
+          .status(404)
+          .send({ message: "La Tarjeta no ha sido encontrada" });
       }
       res.status(500).send({ message: "Error interno del servidor" });
     });
 };
 
-// controlador para darle like a las tarjetas
+// Controlador para darle like a las tarjetas
 module.exports.likeCard = (req, res) => {
-  const { _id } = req.params;
+  const { cardId } = req.params;
+  console.log(cardId, "ID de tarjeta en likeCard");
   Card.findByIdAndUpdate(
-    _id,
+    cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
@@ -73,10 +87,14 @@ module.exports.likeCard = (req, res) => {
     });
 };
 
-// controlador para quitar el like a las tarjetas
+// Controlador para quitar el like a las tarjetas
 module.exports.dislikeCard = (req, res) => {
-  const { _id } = req.params;
-  Card.findByIdAndUpdate(_id, { $pull: { likes: req.user._id } }, { new: true })
+  const { cardId } = req.params;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  )
     .orFail()
     .then((card) => {
       res.status(200).send(card);

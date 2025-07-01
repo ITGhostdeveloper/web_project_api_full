@@ -1,3 +1,5 @@
+const { celebrate } = require("celebrate");
+const { createCardSchema } = require("../utils/validator");
 const express = require("express");
 const {
   getCards,
@@ -13,15 +15,15 @@ const router = express.Router();
 router.get("/", getCards);
 
 // Ruta para crear una nueva tarjeta
-router.post("/", newCard);
+router.post("/", celebrate(createCardSchema), newCard);
 
 // Ruta para eliminar una tarjeta por ID
-router.delete("/:_id", deleteCard);
+router.delete("/:cardId", deleteCard);
 
 // Ruta para darle like a una tarjeta
-router.put("/likes/:_id", likeCard);
+router.put("/:cardId/likes", likeCard);
 
 // Ruta para quitar el like a una tarjeta
-router.delete("/likes/:_id", dislikeCard);
+router.delete("/:cardId/likes", dislikeCard);
 
 module.exports = router;
