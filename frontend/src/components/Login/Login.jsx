@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import logo from "../../images/header-logo.png"
 
 const Login = ({ handleLogin }) => {
   const [data, setData] = useState({
@@ -24,7 +25,7 @@ const Login = ({ handleLogin }) => {
     <div className="login">
       <div className="login__header">
         <img
-          src="src/images/header-logo.png"
+          src= {logo}
           alt="Logo"
           className="login__logo"
         />
