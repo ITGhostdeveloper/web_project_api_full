@@ -11,7 +11,7 @@ const { PORT = 3000 } = process.env;
 
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: ["https://www.gigdevelopers.webs.vc", "https://gigdevelopers.webs.vc", "http://localhost:3001"],
     credentials: true,
   })
 );
