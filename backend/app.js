@@ -11,7 +11,11 @@ const { PORT = 3000 } = process.env;
 
 app.use(
   cors({
-    origin: ["https://www.gigdevelopers.webs.vc", "https://gigdevelopers.webs.vc", "http://localhost:3001"],
+    origin: [
+      "https://www.gigdevelopers.webs.vc",
+      "https://gigdevelopers.webs.vc",
+      "http://localhost:3001",
+    ],
     credentials: true,
   })
 );
@@ -53,6 +57,12 @@ app.use(errorLogger);
 
 // Manejo de errores de Celebrate
 app.use(errors());
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("El servidor va a caer");
+  }, 0);
+});
 
 // Manejo de errores global
 app.use(errorHandler);
