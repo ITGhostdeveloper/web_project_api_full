@@ -165,5 +165,5 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: "http://api.gigdevelopers.webs.vc",
+  baseUrl: "https://api.gigdevelopers.webs.vc",
 });

@@ -1,4 +1,4 @@
-export const BASE_URL = "http://api.gigdevelopers.webs.vc";
+export const BASE_URL = "https://api.gigdevelopers.webs.vc";
 
 export const signUp = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {

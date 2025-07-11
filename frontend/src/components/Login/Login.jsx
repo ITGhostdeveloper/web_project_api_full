@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import logo from "../../images/header-logo.png"
+import logo from "../../images/header-logo.png";
 
 const Login = ({ handleLogin }) => {
   const [data, setData] = useState({
@@ -18,17 +18,12 @@ const Login = ({ handleLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("first")
     handleLogin(data);
   };
   return (
     <div className="login">
       <div className="login__header">
-        <img
-          src= {logo}
-          alt="Logo"
-          className="login__logo"
-        />
+        <img src={logo} alt="Logo" className="login__logo" />
         <Link to="/signup" className="login__header-link">
           Regístrate
         </Link>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../../images/header-logo.png";
 
 const Register = ({ handleRegistration }) => {
   const [data, setData] = useState({
@@ -22,11 +23,9 @@ const Register = ({ handleRegistration }) => {
   return (
     <div className="register">
       <div className="register__header">
-        <img
-          src="src/images/header-logo.png"
-          alt="Logo"
-          className="register__logo"
-        />
+        <img src={logo} 
+          alt="Logo" 
+          className="register__logo" />
         <Link to="/signin" className="register__header-link">
           Iniciar Sesion
         </Link>
